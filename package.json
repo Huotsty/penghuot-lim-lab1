@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "name": "penghuot-lim-lab1-",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Huotsty/penghuot-lim-lab1.git",
+  "author": "Huotsty <penghout78@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js",  
+    "test": "mocha --exit",
+    "lint": "eslint . --ext .js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "chai": "^6.2.0",
+    "eslint": "^9.38.0",
+    "mocha": "^11.7.4",
+    "supertest": "^7.1.4"
+  }
+}
