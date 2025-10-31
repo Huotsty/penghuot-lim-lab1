@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "test": "nyc mocha --exit",
+    "test": "NODE_ENV=test nyc mocha --exit",
     "lint": "eslint . --ext .js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov"
   },
