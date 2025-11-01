@@ -9,8 +9,8 @@
   "scripts": {
     "start": "node server.js",
     "lint": "eslint . --ext .js",
-    "test": "cross-env NODE_ENV=test mocha",
-    "coverage": "cross-env NODE_ENV=test nyc npm test"
+  "test": "cross-env NODE_ENV=test mocha",
+  "coverage": "cross-env NODE_ENV=test nyc mocha"
   },
   "dependencies": {
     "express": "^5.1.0"
