@@ -8,17 +8,20 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "test": "cross-env NODE_ENV=test nyc mocha --exit",
     "lint": "eslint . --ext .js",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov"
+    "test": "cross-env NODE_ENV=test mocha",
+    "coverage": "cross-env NODE_ENV=test nyc npm test"
   },
   "dependencies": {
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/register": "^7.28.3",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "chai": "^6.2.0",
-    "cross-env": "^10.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.38.0",
     "mocha": "^11.7.4",
     "nyc": "^17.1.0",

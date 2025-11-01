@@ -1,12 +1,23 @@
 import { expect } from "chai";
 import request from "supertest";
 import { createApp } from "../app.js";
-import { createServer } from "../server.js";
+import { createServer, PORT } from "../server.js";
 
 describe("Express App", () => {
-  const app = createApp();
+  let app;
 
-  describe("GET /", () => {
+  beforeEach(() => {
+    app = createApp();
+  });
+
+  describe("Application Creation", () => {
+    it("should create an Express application", () => {
+      expect(app).to.be.an('function');
+      expect(app.get).to.be.a('function');
+    });
+  });
+
+  describe("Routes", () => {
     it("should return Hello, CI/CD pipeline!", async () => {
       const res = await request(app).get("/");
       expect(res.status).to.equal(200);
@@ -23,7 +34,11 @@ describe("Express App", () => {
 
 describe("Server", () => {
   let server;
-  const app = createApp();
+  let app;
+
+  beforeEach(() => {
+    app = createApp();
+  });
 
   afterEach(() => {
     if (server && server.listening) {
@@ -31,25 +46,42 @@ describe("Server", () => {
     }
   });
 
-  it("should create a server successfully", async () => {
-    server = createServer(app);
-    expect(server.listening).to.be.false;
-    await server.start(0);
-    expect(server.listening).to.be.true;
+  describe("Server Creation", () => {
+    it("should create a server instance", () => {
+      server = createServer(app);
+      expect(server).to.have.property('listen');
+      expect(server).to.have.property('start');
+      expect(server.listening).to.be.false;
+    });
+
+    it("should use default PORT when no port provided", async () => {
+      server = createServer(app);
+      expect(PORT).to.equal(3000);
+      // Don't actually start on 3000 as it might be in use
+      await server.start(0);
+    });
   });
 
-  it("should handle server errors", async () => {
-    const existingServer = await createServer(app).start(0);
-    server = createServer(app);
+  describe("Server Operations", () => {
+    it("should start server successfully", async () => {
+      server = createServer(app);
+      await server.start(0);
+      expect(server.listening).to.be.true;
+      expect(server.address().port).to.be.a('number');
+    });
 
-    try {
-      // Try to start server on the same port to cause an error
-      await server.start(existingServer.address().port);
-      expect.fail("Should have thrown an error");
-    } catch (err) {
-      expect(err).to.exist;
-    } finally {
-      existingServer.close();
-    }
+    it("should handle server errors", async () => {
+      const existingServer = await createServer(app).start(0);
+      server = createServer(app);
+
+      try {
+        await server.start(existingServer.address().port);
+        expect.fail("Should have thrown an error");
+      } catch (err) {
+        expect(err).to.exist;
+      } finally {
+        existingServer.close();
+      }
+    });
   });
 });

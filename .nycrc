@@ -1,29 +1,17 @@
 {
   "extends": "@istanbuljs/nyc-config-typescript",
   "all": true,
-  "include": [
-    "app.js",
-    "server.js"
-  ],
-  "exclude": [
-    "test/**/*",
-    "coverage/**/*",
-    "node_modules/**/*"
-  ],
-  "reporter": [
-    "text",
-    "text-summary",
-    "lcov"
-  ],
-  "check-coverage": true,
+  "cache": false,
+  "extension": [".js"],
+  "include": ["app.js", "server.js"],
+  "exclude": ["coverage/**", "test/**", ".nyc_output/**", "node_modules/**"],
+  "require": ["@babel/register"],
+  "reporter": ["text", "text-summary", "lcov", "html"],
+  "sourceMap": true,
+  "instrument": true,
+  "checkCoverage": true,
   "branches": 80,
   "lines": 80,
   "functions": 80,
-  "statements": 80,
-  "watermarks": {
-    "lines": [80, 95],
-    "functions": [80, 95],
-    "branches": [80, 95],
-    "statements": [80, 95]
-  }
+  "statements": 80
 }
