@@ -21,16 +21,39 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-      
+          cache: 'npm'
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      
+        run: npm ci
+
       - name: Lint code
-        run: yarn lint
-      
+        run: npm run lint
+
+      - name: Debug Node 18 environment (diagnostics)
+        if: matrix.node-version == '18.x'
+        continue-on-error: true
+        env:
+          NODE_OPTIONS: "--experimental-vm-modules --enable-source-maps"
+        run: |
+          echo "--- node / npm versions ---"
+          node --version
+          npm --version
+          echo "--- node exec args ---"
+          node -p "process.execArgv.join(' ')"
+          echo "--- env NODE_OPTIONS ---"
+          echo "$NODE_OPTIONS"
+          echo "--- workspace files ---"
+          ls -la
+          echo "--- .nyc_output (if any) ---"
+          ls -la .nyc_output || true
+          echo "--- coverage (if any) ---"
+          ls -la coverage || true
+
       - name: Run tests with coverage
-        run: yarn test || true
+        run: npm run coverage
+        env:
+          # Enable vm modules and source-map support so coverage tools can handle ESM on Node 18
+          NODE_OPTIONS: "--experimental-vm-modules --enable-source-maps"
       
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -54,10 +77,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'yarn'
+          cache: 'npm'
       
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
