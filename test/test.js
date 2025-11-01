@@ -63,6 +63,19 @@ describe("Server", () => {
   });
 
   describe("Server Operations", () => {
+    it("should start server in non-test environment", async () => {
+      const oldEnv = process.env.NODE_ENV;
+      process.env.NODE_ENV = "development";
+
+      const { createServer } = await import("../server.js");
+      const server = createServer();
+      await server.start(0);
+      expect(server.listening).to.be.true;
+      server.close();
+
+      process.env.NODE_ENV = oldEnv; // restore
+    });
+
     it("should start server successfully", async () => {
       server = createServer(app);
       await server.start(0);
